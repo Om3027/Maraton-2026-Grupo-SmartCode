@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
@@ -85,6 +85,8 @@ def _register_security_headers(app):
     @app.after_request
     def add_headers(response):
         response.headers.update(SECURITY_HEADERS)
+        if request.path.startswith("/api/"):
+            response.headers["Cache-Control"] = "no-store"
         return response
 
 

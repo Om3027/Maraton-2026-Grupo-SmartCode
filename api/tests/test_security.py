@@ -35,3 +35,7 @@ def test_unexpected_errors_hide_details(app, client):
 def test_oversized_body_rejected(client):
     response = client.post("/api/auth/login", data="x" * 20000, content_type="application/json")
     assert response.status_code == 413
+
+
+def test_api_responses_are_not_cached(client):
+    assert client.get("/api/health").headers["Cache-Control"] == "no-store"

@@ -25,6 +25,7 @@ export async function api(path, { method = "GET", body } = {}) {
     response = await fetch(`/api${path}`, {
       method,
       headers,
+      cache: "no-store",
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch {
