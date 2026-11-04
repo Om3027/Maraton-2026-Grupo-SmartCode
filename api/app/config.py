@@ -15,3 +15,9 @@ def database_url():
 
 def secret_key():
     return os.environ.get("SECRET_KEY", DEV_SECRET_KEY)
+
+
+def cors_origins():
+    """Comma-separated CORS_ORIGINS; the web portal is same-origin, so this only serves local dev."""
+    raw = os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://localhost:8081")
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
