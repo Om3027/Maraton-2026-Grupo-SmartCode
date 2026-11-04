@@ -85,7 +85,12 @@ function ApkButton() {
       </button>
     );
   }
-  return <a className="btn btn-primary" href={APK_URL}>Descargar APK</a>;
+  return (
+    <>
+      <a className="btn btn-primary" href={APK_URL} target="_blank" rel="noopener">Descargar APK</a>
+      <small className="muted">El enlace estará disponible durante 13 días</small>
+    </>
+  );
 }
 
 export default function TestGuide({ onBack }) {
