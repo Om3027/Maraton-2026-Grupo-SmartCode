@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
 import { api, tokenStore } from "./src/api";
+import GuardianHomeScreen from "./src/screens/GuardianHomeScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
@@ -50,6 +51,7 @@ export default function App() {
   else if (showOnboarding) screen = <OnboardingScreen onFinish={finishOnboarding} />;
   else if (!user && registering) screen = <RegisterScreen onSession={handleSession} onBack={() => setRegistering(false)} />;
   else if (!user) screen = <LoginScreen onSession={handleSession} onHelp={() => setShowOnboarding(true)} onRegister={() => setRegistering(true)} />;
+  else if (user.role === "guardian") screen = <GuardianHomeScreen user={user} onLogout={logout} />;
   else screen = <HomeScreen user={user} onLogout={logout} />;
 
   return (
