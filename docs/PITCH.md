@@ -7,6 +7,7 @@
 - Cuentas de demo ya creadas y vinculadas: **usuaria** (en el teléfono, con el APK o Expo Go) y **familiar** (en el portal, en el portátil proyectado).
 - Teléfono con volumen multimedia alto, GPS encendido y datos móviles. La app ya abierta con la sesión iniciada.
 - Plan B: video corto grabado de la demo, por si falla la red del auditorio.
+- **No hacer merge a `main` durante la sustentación:** cada despliegue reinicia la app y el portal muestra errores 502 durante unos segundos.
 
 ## Diapositivas y guion
 
@@ -15,7 +16,7 @@
 | 0:00–1:00 | **1. El problema** | Integrante 1 | De noche, en un paradero o una calle sola, pedir ayuda exige desbloquear el teléfono, abrir una app y escribir. No hay tiempo. ODS 5 (igualdad de género), 11 (ciudades seguras) y 16 (paz y justicia). |
 | 1:00–1:45 | **2. La solución: Ruta Segura** | Integrante 1 | Tres toques activan una alarma fuerte y envían la ubicación cada 5 s. La familia la ve en vivo en un portal web. Si el teléfono se queda sin señal, el portal muestra el último lugar conocido, su hora y el aviso "Señal perdida". |
 | 1:45–5:15 | **3. Demo en vivo** | Integrantes 2 y 3 | Ver el guion de la demo abajo. |
-| 5:15–6:45 | **4. Arquitectura** | Integrante 3 | Diagrama MVC: Flask (modelos, vistas, controladores y servicios), React, Expo y PostgreSQL en Azure. CI/CD: cada PR corre 37 pruebas y despliega solo. APIs externas: OpenStreetMap con Leaflet y Nominatim (Google Maps opcional). Disparador de 3 toques, porque Expo no puede leer el botón de encendido. |
+| 5:15–6:45 | **4. Arquitectura** | Integrante 3 | Diagrama MVC: Flask (modelos, vistas, controladores y servicios), React, Expo y PostgreSQL en Azure. CI/CD: cada PR corre 37 pruebas y despliega solo. APIs externas: Google Maps JavaScript API para el mapa (con OpenStreetMap y Leaflet como respaldo sin llave) y Nominatim para la dirección. Disparador de 3 toques, porque Expo no puede leer el botón de encendido. |
 | 6:45–7:45 | **5. Seguridad y accesibilidad** | Integrante 3 | JWT, bcrypt, teléfono y coordenadas cifrados con Fernet, autorización por dueño y por vínculo, límite de intentos (login y códigos), CSP y cabeceras, una prueba por cada riesgo OWASP. WCAG 2.1 AA: contraste, foco visible, etiquetas, botones grandes, lector de pantalla y onboarding de 3 pasos. |
 | 7:45–8:45 | **6. Uso ético de la IA** | Integrante 1 | Claude Code (Claude Opus 5.5). Todo prompt registrado. Errores de la IA que el equipo detectó (el módulo nativo que cerraba la app, `expo-av` retirado, la CSP, el código adivinable). Marco ético colombiano 2021: transparencia, privacidad, control humano. |
 | 8:45–10:00 | **7. Impacto, limitaciones y cierre** | Integrante 1 | Costo casi cero (F1 y mapas abiertos), lo pueden adoptar alcaldías y universidades. Limitaciones: solo primer plano, botón físico y aprobación de vínculos (trabajo futuro). Cierre: "Tres toques pueden ser la diferencia." |

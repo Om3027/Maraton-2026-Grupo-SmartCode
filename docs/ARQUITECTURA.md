@@ -52,7 +52,7 @@ flowchart LR
 ## 5. API externa y datos abiertos
 - **OpenStreetMap (datos abiertos) con Leaflet:** las teselas del mapa en vivo del portal.
 - **Nominatim (geocodificación inversa de OpenStreetMap):** convierte la última coordenada en una dirección legible ("Carrera 5, Cogua…"). Para respetar su política de uso, se consulta como máximo cada 15 s y solo si la persona se movió unos 20 m.
-- **Google Maps JavaScript API (opcional):** si al compilar existe el secreto `VITE_GOOGLE_MAPS_API_KEY`, el portal usa Google Maps en lugar de Leaflet. La llave nunca está en el código.
+- **Google Maps JavaScript API (activa en producción):** como al compilar existe el secreto `VITE_GOOGLE_MAPS_API_KEY`, el portal usa Google Maps. Sin la llave usa Leaflet con OpenStreetMap. La llave nunca está en el código. Verificado en la URL pública el 4 de noviembre a las 10:34.
 - **APIs del dispositivo (Expo):** GPS (`expo-location`), audio (`expo-audio`), vibración y almacenamiento seguro del token (`expo-secure-store`).
 
 ## 5.1 Disparador de la alerta (decisión de diseño)
