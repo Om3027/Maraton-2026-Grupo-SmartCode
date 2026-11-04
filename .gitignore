@@ -227,3 +227,4 @@ node_modules/
 web/dist/
 api/app/static/
 .expo/
+.venv/
