@@ -24,23 +24,35 @@ function StatusBadge({ status }) {
 export default function LiveView({ userId }) {
   const [status, setStatus] = useState(null);
   const [error, setError] = useState("");
+  const [updatedAt, setUpdatedAt] = useState(null);
   const last = status?.last_location;
   const address = useReverseGeocode(last);
 
   useEffect(() => {
     let cancelled = false;
+    let timer = null;
     async function poll() {
+      clearTimeout(timer);
       try {
-        const data = await api(`/users/${userId}/live`);
-        if (!cancelled) { setStatus(data); setError(""); }
+        const data = await api(`/users/${userId}/live?_=${Date.now()}`);
+        if (!cancelled) { setStatus(data); setError(""); setUpdatedAt(new Date()); }
       } catch (err) {
         if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) timer = setTimeout(poll, POLL_MS); // keep polling even after a failed request
       }
+    }
+    function onVisible() {
+      if (document.visibilityState === "visible") poll();
     }
     setStatus(null);
     poll();
-    const timer = setInterval(poll, POLL_MS);
-    return () => { cancelled = true; clearInterval(timer); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [userId]);
 
   if (!status) return <section className="card" aria-busy="true"><p role="status">{error || "Cargando ubicación…"}</p></section>;
@@ -52,6 +64,9 @@ export default function LiveView({ userId }) {
         <h2 id="live-title">{status.user.full_name}</h2>
         <div aria-live="polite"><StatusBadge status={status} /></div>
       </div>
+      <p className="muted updated">
+        Última actualización: {updatedAt?.toLocaleTimeString("es-CO")} · se actualiza sola cada 5 segundos
+      </p>
       {error && <p className="alert-error" role="alert">{error} Seguimos intentando cada 5 segundos.</p>}
 
       {last ? (
