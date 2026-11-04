@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Ruta Segura",
+    "slug": "ruta-segura",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartcode.rutasegura"
+    },
+    "android": {
+      "package": "com.smartcode.rutasegura",
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "VIBRATE"],
+      "adaptiveIcon": {
+        "backgroundColor": "#6A1B9A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-audio",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Ruta Segura usa tu ubicación solo durante una alerta, para que tus familiares sepan dónde estás."
+        }
+      ]
+    ]
+  }
+}
