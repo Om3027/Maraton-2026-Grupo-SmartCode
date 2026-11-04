@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Vibration } from "react-native";
+import { NativeModules, Vibration } from "react-native";
 import { setAudioModeAsync, useAudioPlayer } from "expo-audio";
-import { VolumeManager } from "react-native-volume-manager";
 
 const ALARM = require("../assets/alarm.wav");
 const VIBRATION_PATTERN = [0, 800, 400];
@@ -19,14 +18,29 @@ const AUDIO_MODE = {
   shouldPlayInBackground: true,
 };
 
+function loadVolumeManager() {
+  // Native-only module: importing it at the top crashes Expo Go, so require it lazily after checking it is linked.
+  if (!NativeModules.VolumeManager) return null;
+  try {
+    return require("react-native-volume-manager").VolumeManager;
+  } catch (error) {
+    log("volume manager failed to load:", error.message);
+    return null;
+  }
+}
+
 async function forceMaxSystemVolume() {
-  // Needs the native module (dev build / APK). In Expo Go it throws and we rely on the player volume.
+  const volumeManager = loadVolumeManager();
+  if (!volumeManager) {
+    log("system volume not available");
+    return;
+  }
   for (const type of ["music", "alarm"]) {
     try {
-      await VolumeManager.setVolume(1.0, { type, showUI: false });
+      await volumeManager.setVolume(1.0, { type, showUI: false });
       log(`system volume '${type}' set to 1.0`);
     } catch (error) {
-      log(`system volume '${type}' not available (expected in Expo Go):`, error.message);
+      log(`system volume '${type}' failed:`, error.message);
     }
   }
 }
