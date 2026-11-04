@@ -70,16 +70,6 @@ export default function HomeScreen({ user, onLogout }) {
     setAlertId(null);
   }
 
-  if (user.role !== "user") {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title} accessibilityRole="header">Hola, {user.full_name}</Text>
-        <Text style={styles.text}>Tu cuenta es de familiar. Para ver la ubicación de quien cuidas, usa el portal web de Ruta Segura.</Text>
-        <Button label="Cerrar sesión" variant="secondary" onPress={onLogout} />
-      </View>
-    );
-  }
-
   if (active) {
     return (
       <View style={[styles.container, styles.alertBg]}>
@@ -126,8 +116,6 @@ export default function HomeScreen({ user, onLogout }) {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 24, justifyContent: "center" },
   greeting: { fontSize: 20, color: colors.text, textAlign: "center", marginBottom: 16 },
-  title: { fontSize: 26, fontWeight: "800", color: colors.text, marginBottom: 12 },
-  text: { fontSize: 18, color: colors.text, marginBottom: 20, lineHeight: 26 },
   sos: { alignSelf: "center", width: 260, height: 260, borderRadius: 130, backgroundColor: colors.danger, justifyContent: "center", alignItems: "center", elevation: 6 },
   sosPressed: { backgroundColor: colors.dangerDark, transform: [{ scale: 0.97 }] },
   sosText: { color: "#FFFFFF", fontSize: 64, fontWeight: "900" },

@@ -25,6 +25,7 @@ export default function LoginScreen({ onSession, onHelp, onRegister }) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <Text style={styles.title} accessibilityRole="header">Iniciar sesión</Text>
+      <Text style={styles.subtitle}>Para usuarias y familiares: cada quien entra con su propia cuenta.</Text>
       <View style={styles.field}>
         <Text style={styles.label} nativeID="emailLabel">Correo electrónico</Text>
         <TextInput
@@ -57,7 +58,8 @@ export default function LoginScreen({ onSession, onHelp, onRegister }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 24 },
-  title: { fontSize: 28, fontWeight: "800", color: colors.text, marginBottom: 20 },
+  title: { fontSize: 28, fontWeight: "800", color: colors.text, marginBottom: 4 },
+  subtitle: { fontSize: 16, color: colors.muted, marginBottom: 20 },
   field: { marginBottom: 14 },
   label: { fontSize: 16, fontWeight: "600", color: colors.text, marginBottom: 6 },
   input: { minHeight: 52, borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 14, fontSize: 18, backgroundColor: colors.surface, color: colors.text },

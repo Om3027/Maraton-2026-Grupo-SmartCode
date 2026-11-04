@@ -4,7 +4,8 @@
 
 ## Preparación (antes de entrar)
 - Abrir la URL pública 5 minutos antes para "despertar" el plan F1, que tarda en la primera carga: https://smartcode-maraton-app-c7f9asg3badvf8fr.spaincentral-01.azurewebsites.net
-- Cuentas de demo ya creadas y vinculadas: **usuaria** (en el teléfono, con el APK o Expo Go) y **familiar** (en el portal, en el portátil proyectado).
+- Cuentas de demo ya creadas y vinculadas: **usuaria** (en el teléfono, con el APK o Expo Go) y **familiar** (en el portal, en el portátil proyectado). Opcional: un segundo teléfono con la cuenta de familiar en la app, que muestra la misma ubicación, la hora y la etiqueta "Señal perdida", más el botón "Abrir en Google Maps".
+- Las dos cuentas se pueden crear desde la app: en "Crear cuenta" se elige **Usuaria** o **Familiar**.
 - Teléfono con **volumen multimedia al máximo puesto a mano**, GPS encendido y datos móviles. La app ya abierta con la sesión iniciada. Usar el **APK** si está listo: Expo Go no puede subir el volumen del sistema y en algunos teléfonos la alarma no se oye. En ese caso, mostrar la vibración y explicar que el APK es el que fuerza el volumen.
 - Plan B: video corto grabado de la demo, por si falla la red del auditorio.
 - **No hacer merge a `main` durante la sustentación:** cada despliegue reinicia la app y el portal muestra errores 502 durante unos segundos.
