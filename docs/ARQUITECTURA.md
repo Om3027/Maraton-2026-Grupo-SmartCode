@@ -106,7 +106,7 @@ flowchart LR
 |---|---|
 | El botón físico de encendido no se puede usar como disparador desde Expo (ver 5.1). | Módulo nativo con servicio de accesibilidad o atajo del sistema. |
 | La ubicación se envía solo con la app en primer plano (no se pide ubicación en segundo plano). | Servicio en primer plano de Android con notificación persistente. |
-| El volumen del sistema solo se fuerza en el APK; en Expo Go se usa el del reproductor y la vibración. | — |
+| **Expo Go no puede cambiar el volumen del sistema.** En algunos teléfonos, al activar el SOS en Expo Go el volumen baja y no se oye la alarma. `expo-audio` reproduce siempre por el canal multimedia (no permite elegir el canal de alarma) y el módulo nativo de volumen no existe en Expo Go. **El APK es la versión pensada para esto:** incluye `react-native-volume-manager` y sube al máximo los volúmenes multimedia y de alarma. En Expo Go, la **vibración continua** es el aviso garantizado. | Reproducir por el canal de alarma de Android con un módulo nativo propio. |
 | El vínculo con un familiar se crea solo con el código, sin que la usuaria lo apruebe, y no se puede revocar desde la app. | Aprobación explícita de cada vínculo, lista de familiares y opción de revocar. |
 | El JWT dura 60 min y no hay *refresh token*. | *Refresh tokens* rotativos y cierre de sesión en el servidor. |
 | El límite de intentos se guarda en memoria del proceso. | Redis cuando haya varias instancias. |
