@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 
-const BASE_URL =
+export const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ||
   "https://smartcode-maraton-app-c7f9asg3badvf8fr.spaincentral-01.azurewebsites.net";
 const TOKEN_KEY = "rs_token";

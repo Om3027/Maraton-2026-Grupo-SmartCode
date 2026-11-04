@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
-import { api } from "../api";
+import { KeyboardAvoidingView, Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { api, BASE_URL } from "../api";
 import { Button } from "../components";
 import { colors } from "../theme";
 
-export default function LoginScreen({ onSession, onHelp }) {
+export default function LoginScreen({ onSession, onHelp, onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,7 +43,13 @@ export default function LoginScreen({ onSession, onHelp }) {
       </View>
       {error ? <Text style={styles.error} accessibilityRole="alert" accessibilityLiveRegion="assertive">{error}</Text> : null}
       <Button label={busy ? "Un momento…" : "Entrar"} onPress={submit} disabled={busy || !email || !password} />
-      <Text style={styles.help}>¿No tienes cuenta? Créala en el portal web de Ruta Segura como «Usuaria» y vuelve aquí.</Text>
+      <Button label="Crear cuenta" variant="secondary" onPress={onRegister} />
+      <Button
+        label="¿Eres familiar? Regístrate en el portal web"
+        variant="link"
+        hint="Abre el portal de Ruta Segura en el navegador"
+        onPress={() => Linking.openURL(BASE_URL).catch(() => setError("No pudimos abrir el navegador."))}
+      />
       <Button label="¿Cómo funciona?" variant="link" onPress={onHelp} />
     </KeyboardAvoidingView>
   );
@@ -56,5 +62,4 @@ const styles = StyleSheet.create({
   label: { fontSize: 16, fontWeight: "600", color: colors.text, marginBottom: 6 },
   input: { minHeight: 52, borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 14, fontSize: 18, backgroundColor: colors.surface, color: colors.text },
   error: { color: colors.danger, backgroundColor: "#FDE7E6", padding: 12, borderRadius: 8, fontSize: 16, marginBottom: 8 },
-  help: { color: colors.muted, fontSize: 15, marginTop: 12, textAlign: "center" },
 });

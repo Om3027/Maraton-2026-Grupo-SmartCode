@@ -7,6 +7,7 @@ import { api, tokenStore } from "./src/api";
 import HomeScreen from "./src/screens/HomeScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
 import { colors } from "./src/theme";
 
 const ONBOARDING_KEY = "rs_onboarding_done";
@@ -15,6 +16,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [registering, setRegistering] = useState(false);
 
   useEffect(() => {
     async function restore() {
@@ -34,6 +36,7 @@ export default function App() {
 
   async function handleSession(session) {
     await tokenStore.set(session.token);
+    setRegistering(false);
     setUser(session.user);
   }
 
@@ -45,7 +48,8 @@ export default function App() {
   let screen;
   if (loading) screen = <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Cargando" style={styles.loader} />;
   else if (showOnboarding) screen = <OnboardingScreen onFinish={finishOnboarding} />;
-  else if (!user) screen = <LoginScreen onSession={handleSession} onHelp={() => setShowOnboarding(true)} />;
+  else if (!user && registering) screen = <RegisterScreen onSession={handleSession} onBack={() => setRegistering(false)} />;
+  else if (!user) screen = <LoginScreen onSession={handleSession} onHelp={() => setShowOnboarding(true)} onRegister={() => setRegistering(true)} />;
   else screen = <HomeScreen user={user} onLogout={logout} />;
 
   return (
