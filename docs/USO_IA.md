@@ -20,8 +20,31 @@
 | 9:50 | Error en el teléfono: al activar el SOS el volumen bajó y no sonó nada. Se pidió depurarlo con `expo-av` (`setAudioModeAsync`), `react-native-volume-manager` para poner el volumen al máximo, vibración de respaldo y logs temporales. | Se revisó el código fuente de `expo-audio` en Android: pausa el reproductor cuando pierde el foco de audio, y el código anterior ignoraba en silencio los errores del modo de audio. | **Modificado:** no se usó `expo-av` porque fue retirado del SDK de Expo (este proyecto usa el SDK 58); se aplicaron las opciones equivalentes de `expo-audio`. Se aceptaron `react-native-volume-manager` (solo funciona en un build de desarrollo o APK, no en Expo Go), la vibración continua de respaldo, la reanudación automática si el sistema pausa la alarma y los logs `[alarm]`. |
 | 10:14 | La app se cerraba al abrir en Expo Go con el error "react-native-volume-manager doesn't seem to be linked". El equipo diagnosticó que el import de arriba del archivo cargaba el módulo nativo y pidió cargarlo de forma diferida. | `require()` diferido, solo si existe `NativeModules.VolumeManager`. | **Error de la IA, corregido por el equipo:** la IA había afirmado que el `try/catch` alrededor de las llamadas bastaba para Expo Go, sin probarlo en un teléfono. El paquete falla apenas se importa. El equipo confirmó en su teléfono que la alarma suena y la app abre, y después se quitaron los logs temporales. |
 
+| 10:20 | Quitar los logs temporales, fusionar la corrección, preparar el APK con EAS (perfil `preview`) y terminar los documentos, el guion y la plantilla de usabilidad. | `eas.json`, permisos de Android mínimos y documentos en español. | **Aceptado.** El equipo lanza el build con su propia cuenta de Expo. |
+
 ## Evaluación crítica
-_(se completa al cierre)_
+
+**Errores y alucinaciones detectados y corregidos**
+1. **Import de un módulo nativo en Expo Go:** la IA afirmó que bastaba un `try/catch` alrededor de las llamadas a `react-native-volume-manager`. Era falso: el paquete falla apenas se importa y la app se cerraba al abrir. Lo detectó el equipo en el teléfono. *Lección: una afirmación de la IA sobre comportamiento nativo no vale hasta probarla en el dispositivo.*
+2. **API obsoleta en las instrucciones:** el prompt del equipo pedía `expo-av`, que ya no existe en el SDK 58. La IA lo detectó al revisar `node_modules` y usó `expo-audio`.
+3. **CSP con un dominio inexacto** (`*.tile.openstreetmap.org`): se corrigió antes del merge.
+4. **Diseño inseguro inicial:** el vínculo por código de invitación no tenía límite de intentos. Lo marcó la revisión automática de seguridad y se corrigió con una prueba.
+5. **Conocimiento desactualizado:** Expo SDK 58 es posterior a los datos de entrenamiento del modelo. Para no depender de la memoria del modelo, se leyeron los tipos (`.d.ts`) y el código nativo de las librerías instaladas.
+
+**Verificación humana:** cada cambio pasó por `pytest` (37 pruebas) en local y en CI antes de desplegar. El portal se revisó en un navegador y la app en un teléfono real. Ningún cambio llegó a `main` sin Pull Request.
+
+**Sesgos:** la app supone que la usuaria tiene un smartphone, datos móviles y alfabetización digital. Eso puede excluir a mujeres en situación de mayor vulnerabilidad económica. Los textos se escribieron con lenguaje cuidadoso y no culpabilizante, y el rol de familiar se pensó sin suponer el género de quien cuida.
+
+**Privacidad:** a la IA no se le dieron contraseñas, la `DATABASE_URL` ni la `SECRET_KEY`; solo se usan variables de entorno. No se usaron datos personales reales: las cuentas de prueba son ficticias. La ubicación se cifra en reposo y solo la ven los familiares vinculados. Advertencia: el portal envía las coordenadas a Nominatim (OpenStreetMap) para obtener la dirección. Es un tercero, y se documenta como limitación.
+
+**Dependencia:** la IA aceleró el trabajo repetitivo (estructura, pruebas, estilos), pero las decisiones de producto fueron del equipo: el gesto de 3 toques, "Silenciar alarma" separado de "Estoy a salvo" y los 30 s para "Señal perdida". También el diagnóstico del error de Expo Go. El equipo puede explicar y mantener cada capa sin la IA.
 
 ## Marco ético de la IA en Colombia (2021)
-_(se completa al cierre)_
+| Principio | Cómo se aplicó |
+|---|---|
+| **Transparencia y explicación** | Se declara la herramienta, el modelo y cada prompt relevante con lo que se aceptó, se modificó o se rechazó. Los commits llevan la línea `Co-Authored-By` de la IA. |
+| **Privacidad** | Datos mínimos (no se pide documento de identidad), cifrado del teléfono y las coordenadas, ubicación solo durante una alerta y solo para familiares vinculados, y sin secretos en el repositorio ni en los prompts. |
+| **Control humano y responsabilidad** | El equipo aprobó el plan antes de que se escribiera código, revisó cada PR y probó en dispositivos. La responsabilidad del software es del equipo, no de la IA. |
+| **Seguridad** | OWASP Top 10 con una prueba por protección, y revisión automática de seguridad atendida. |
+| **No discriminación e inclusión** | Accesibilidad WCAG 2.1 AA (contraste, foco visible, etiquetas, botones grandes, lector de pantalla) y lenguaje claro en español. |
+| **Beneficio social** | La herramienta atiende un problema de violencia de género en el espacio público (ODS 5, 11 y 16). |
