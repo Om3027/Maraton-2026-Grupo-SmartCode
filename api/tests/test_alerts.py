@@ -104,3 +104,13 @@ def test_invalid_invite_code(client, register):
 @pytest.mark.parametrize("lat,lng", [(91, 0), (0, -181), ("4.7", 0), (True, 0), (None, 0)])
 def test_location_validation(client, woman, lat, lng):
     assert send(client, woman, start(client, woman), lat=lat, lng=lng).status_code == 400
+
+
+def test_invite_code_guessing_is_rate_limited(client, register):
+    session = register("papa@example.com", role="guardian")
+    codes = [
+        client.post("/api/links", json={"invite_code": f"ZZZZZZZ{i}"}, headers=bearer(session)).status_code
+        for i in range(2, 8)
+    ]
+    assert codes[:5] == [404] * 5
+    assert codes[5] == 429
