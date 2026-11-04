@@ -31,7 +31,7 @@ flowchart LR
 | Vistas | `api/app/views/` | Validación de entradas (`validators.py`) y forma de las respuestas JSON (`serializers.py`). |
 | Controladores | `api/app/controllers/` | Blueprints HTTP: `auth`, `links`, `alerts` y `health`. No consultan la base directamente. |
 | Servicios | `api/app/services/` | Reglas de negocio, autorización por dueño y por vínculo, cifrado Fernet, JWT y bcrypt. |
-| Presentación | `web/`, `mobile/` | Portal React (familiares) y app Expo (mujer usuaria). |
+| Presentación | `web/`, `mobile/` | Portal React (familiares) y app Expo con los dos roles. La **usuaria** se registra, ve su código de invitación y activa el SOS. El **familiar** se registra, se vincula con el código y ve en vivo la última ubicación (sondeo de 5 s, "Señal perdida" y botón "Abrir en Google Maps"). |
 
 ## 3. Decisiones técnicas
 | Decisión | Por qué |
