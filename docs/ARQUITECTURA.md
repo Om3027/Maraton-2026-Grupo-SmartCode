@@ -49,8 +49,14 @@ flowchart LR
 - **alerts**(id, user_id → users, status `active`/`closed`, started_at, closed_at)
 - **location_points**(id, alert_id → alerts, coords_encrypted, recorded_at; índice (alert_id, recorded_at))
 
-## 5. API externa
-_(Pendiente: OpenStreetMap con Leaflet para el mapa y Nominatim para mostrar la dirección aproximada. Se cambia a Google Maps JavaScript API si existe `VITE_GOOGLE_MAPS_API_KEY`.)_
+## 5. API externa y datos abiertos
+- **OpenStreetMap (datos abiertos) con Leaflet:** las teselas del mapa en vivo del portal.
+- **Nominatim (geocodificación inversa de OpenStreetMap):** convierte la última coordenada en una dirección legible ("Carrera 5, Cogua…"). Para respetar su política de uso, se consulta como máximo cada 15 s y solo si la persona se movió unos 20 m.
+- **Google Maps JavaScript API (opcional):** si al compilar existe el secreto `VITE_GOOGLE_MAPS_API_KEY`, el portal usa Google Maps en lugar de Leaflet. La llave nunca está en el código.
+- **APIs del dispositivo (Expo):** GPS (`expo-location`), audio (`expo-audio`), vibración y almacenamiento seguro del token (`expo-secure-store`).
+
+## 5.1 Disparador de la alerta (decisión de diseño)
+El **botón físico de encendido no se puede leer desde Expo**. Android no entrega ese evento a las apps sin código nativo propio (un servicio de accesibilidad o un receptor de pantalla encendida/apagada), y nada de eso funciona en Expo Go ni en un proyecto administrado sin un módulo nativo a medida. Por eso **el disparador es tocar 3 veces seguidas (en menos de 1,5 s) el botón SOS**, que ocupa buena parte de la pantalla. Es rápido, no necesita mirar el teléfono y evita activaciones accidentales. En el APK, la app además sube al máximo el volumen del sistema (multimedia y alarma) con `react-native-volume-manager`. En Expo Go el volumen del sistema no se puede cambiar, así que se usa el volumen del reproductor en 1.0 más vibración continua.
 
 ## 6. Seguridad (OWASP Top 10)
 | Riesgo | Protección | Prueba |
@@ -65,10 +71,45 @@ _(Pendiente: OpenStreetMap con Leaflet para el mapa y Nominatim para mostrar la 
 | A06, A08, A10 | Dependencias con versión fija, CI que corre las pruebas antes de desplegar, y el servidor no hace peticiones a URLs que mande el usuario (no hay SSRF). | CI en GitHub Actions |
 
 ## 7. Despliegue y CI/CD en Azure
-_(Pendiente de completar al cierre: flujo de GitHub Actions → Azure App Service, comando gunicorn, variables de entorno.)_
+```mermaid
+flowchart LR
+  PR[Pull Request a main] --> GA[GitHub Actions]
+  GA --> B1[Node 20: npm ci y build de web/]
+  B1 --> B2[Copiar web/dist a api/app/static]
+  B2 --> B3[Python 3.12: pip install y pytest]
+  B3 --> D[Desplegar solo api/ con el perfil de publicación]
+  D --> AS[Azure App Service F1<br/>gunicorn app.main:app]
+  AS --> PG[(PostgreSQL Flexible Server)]
+```
+- **Infraestructura** (preparada antes del evento): grupo `rg-maraton`, región Spain Central, App Service Linux F1 y PostgreSQL 16 Flexible Server con firewall que solo admite servicios de Azure.
+- **Arranque:** `gunicorn --bind=0.0.0.0:8000 --workers 1 --threads 4 app.main:app`.
+- **Variables de entorno** (solo en Azure, nunca en el repositorio): `DATABASE_URL` con SSL, `SECRET_KEY` (firma JWT y deriva la llave Fernet) y `SCM_DO_BUILD_DURING_DEPLOYMENT=1`.
+- **Tablas:** se crean al arrancar con `db.create_all()`.
+- **Salud:** `GET /api/health` responde `{"status":"ok"}` sin tocar la base.
+- **Si fallan las pruebas, no se despliega.** Cada merge a `main` publica en 2 a 3 minutos.
+- **App móvil:** APK con EAS Build (perfil `preview` en `mobile/eas.json`), que apunta a la URL pública de Azure.
 
 ## 8. Escalabilidad y sostenibilidad
-_(Pendiente: API sin estado, base de datos como única fuente de verdad, ruta de escalado horizontal, operación de bajo costo.)_
+- **API sin estado:** la sesión vive en el JWT y no en memoria del servidor, así que cualquier instancia puede atender cualquier petición.
+- **La base de datos es la única fuente de verdad:** alertas y ubicaciones viven en PostgreSQL. Nada se guarda en el disco efímero de la App Service.
+- **Ruta de escalado horizontal:**
+  1. Subir el plan a B1 o S1 y aumentar instancias o workers de gunicorn.
+  2. Llevar el límite de intentos (hoy en memoria, válido con 1 worker) a Redis.
+  3. Agregar réplicas de lectura de PostgreSQL para el sondeo de los familiares.
+  4. Si la carga lo exige, cambiar el sondeo por Azure Web PubSub o SignalR.
+- **Consultas livianas:** el sondeo de 5 s usa índices (`alert_id`, `recorded_at`) y devuelve máximo los últimos 30 puntos.
+- **Operación de bajo costo:** el plan F1 es gratuito, la base es de nivel básico y los mapas son abiertos (OpenStreetMap), así que no hay costo por llamada. Esto la hace viable para alcaldías, universidades u organizaciones sociales con poco presupuesto.
+- **Sostenibilidad social:** el código es de una sola base y está documentado. Otra ciudad la puede desplegar cambiando solo las variables de entorno.
 
 ## 9. Limitaciones y trabajo futuro
-_(Pendiente.)_
+| Limitación | Trabajo futuro |
+|---|---|
+| El botón físico de encendido no se puede usar como disparador desde Expo (ver 5.1). | Módulo nativo con servicio de accesibilidad o atajo del sistema. |
+| La ubicación se envía solo con la app en primer plano (no se pide ubicación en segundo plano). | Servicio en primer plano de Android con notificación persistente. |
+| El volumen del sistema solo se fuerza en el APK; en Expo Go se usa el del reproductor y la vibración. | — |
+| El vínculo con un familiar se crea solo con el código, sin que la usuaria lo apruebe, y no se puede revocar desde la app. | Aprobación explícita de cada vínculo, lista de familiares y opción de revocar. |
+| El JWT dura 60 min y no hay *refresh token*. | *Refresh tokens* rotativos y cierre de sesión en el servidor. |
+| El límite de intentos se guarda en memoria del proceso. | Redis cuando haya varias instancias. |
+| Nominatim es un tercero y recibe la última coordenada. | Geocodificar en el servidor o usar una instancia propia. |
+| Sondeo cada 5 s, con hasta 5 s de retraso. | Notificaciones push (Expo Notifications) y WebSockets gestionados. |
+| No hay botón de llamar a la Línea 123 desde la app. | Llamada o SMS automático a un contacto de emergencia. |
