@@ -96,12 +96,21 @@ input { width: 100%; min-height: 44px; padding: 10px 12px; font-size: 1rem; bord
 .guide-note, .guide-warning { padding: 12px 14px; border-radius: 8px; border-left: 6px solid; }
 .guide-note { background: #f3e5f5; border-color: var(--primary); }
 .guide-warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-text); }
-.steps, .flow { padding-left: 1.25rem; }
-.steps li, .flow li { margin-bottom: 12px; }
+.steps { padding-left: 1.25rem; }
+.steps li { margin-bottom: 12px; }
 .steps .btn { margin-top: 8px; display: flex; width: fit-content; }
 .steps .btn:disabled { cursor: not-allowed; }
-.flow { list-style: none; padding-left: 0; }
 .command { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
 .command code { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; background: var(--text); color: #ffffff; padding: 10px 12px; border-radius: 8px; font-size: 0.95rem; }
 .command-status { flex-basis: 100%; font-size: 0.9rem; color: var(--ok); min-height: 1em; }
 .command-status:empty { display: none; }
+.roles { display: grid; gap: 16px; grid-template-columns: 1fr; margin-bottom: 16px; }
+@media (min-width: 720px) { .roles { grid-template-columns: 1fr 1fr; } }
+.role-card { margin-bottom: 0; border-top: 6px solid var(--primary); }
+.role-card h3 { font-size: 1.15rem; margin: 0 0 4px; }
+.numbered { list-style: none; counter-reset: step; padding: 0; margin: 12px 0 0; }
+.numbered li { counter-increment: step; position: relative; padding-left: 44px; margin-bottom: 14px; min-height: 32px; }
+.numbered li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: var(--on-primary); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.checklist { list-style: none; padding: 0; margin: 0; }
+.checklist li { margin-bottom: 8px; }
+.checklist span { color: var(--ok); font-weight: 800; margin-right: 4px; }
