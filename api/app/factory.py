@@ -24,7 +24,7 @@ SECURITY_HEADERS = {
         "script-src 'self' https://maps.googleapis.com; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data: https://*.tile.openstreetmap.org https://*.googleapis.com "
+        "img-src 'self' data: https://tile.openstreetmap.org https://*.googleapis.com "
         "https://*.gstatic.com https://*.google.com; "
         "connect-src 'self' https://nominatim.openstreetmap.org https://*.googleapis.com; "
         "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
