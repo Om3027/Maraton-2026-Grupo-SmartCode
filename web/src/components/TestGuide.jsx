@@ -8,6 +8,52 @@ const EXPO_COMMANDS = [
   { label: "Iniciar Expo", command: "npx expo start" },
 ];
 
+const ROLES = [
+  {
+    id: "role-user",
+    title: "Persona 1: Usuaria",
+    where: "En el celular, con la app instalada (APK o Expo Go).",
+    steps: [
+      <>Abre la app y pulsa <strong>«Crear cuenta»</strong>.</>,
+      <>Elige <strong>«Usuaria»</strong> y escribe tu nombre, correo y contraseña.</>,
+      <>Al terminar verás tu <strong>código de invitación</strong> en la pantalla principal. Compártelo con la persona 2.</>,
+      <>Para activar la alarma, toca el botón <strong>SOS 3 veces</strong>. Suena la alarma, el teléfono vibra y la pantalla se pone roja.</>,
+      <><strong>«Silenciar alarma»</strong> apaga el sonido, pero la ubicación se sigue enviando. <strong>«Estoy a salvo»</strong> termina la alerta.</>,
+    ],
+  },
+  {
+    id: "role-guardian",
+    title: "Persona 2: Familiar",
+    where: "En este portal web o en la app.",
+    steps: [
+      <>Abre el portal (esta misma página) y pulsa <strong>«¿No tienes cuenta? Créala aquí»</strong>, o crea la cuenta desde la app.</>,
+      <>Elige <strong>«Familiar»</strong> y escribe tu nombre, correo y contraseña.</>,
+      <>Escribe el código de invitación que te dio la usuaria y pulsa <strong>«Vincular»</strong>.</>,
+      <>Cuando la usuaria active la alerta, en menos de 5 segundos verás <strong>«Alerta activa: en vivo»</strong>, el mapa, la dirección y la hora de la última actualización.</>,
+      <>Si el teléfono pierde la señal por más de 30 segundos, verás <strong>«Señal perdida»</strong> con la última ubicación conocida.</>,
+    ],
+  },
+];
+
+const EXPECTATIONS = [
+  "La alarma suena y el teléfono vibra.",
+  "El familiar ve la ubicación en vivo, actualizada cada 5 segundos.",
+  "Sin datos por más de 30 segundos aparece «Señal perdida».",
+  "«Estoy a salvo» termina la alerta y el portal muestra «Sin alerta activa».",
+];
+
+function RoleCard({ id, title, where, steps }) {
+  return (
+    <section className="card role-card" aria-labelledby={id}>
+      <h3 id={id}>{title}</h3>
+      <p className="muted">{where}</p>
+      <ol className="numbered" role="list">
+        {steps.map((step, index) => <li key={index}>{step}</li>)}
+      </ol>
+    </section>
+  );
+}
+
 function CopyCommand({ label, command }) {
   const [status, setStatus] = useState("");
 
@@ -52,7 +98,7 @@ export default function TestGuide({ onBack }) {
       </p>
 
       <p className="guide-note" role="note">
-        <strong>Importante:</strong> la alerta solo se activa desde la app móvil. Este portal web es para el familiar que acompaña.
+        <strong>La alerta solo se activa desde la app móvil. El portal web es para el familiar.</strong>
       </p>
 
       <section className="card" aria-labelledby="option-a">
@@ -85,14 +131,19 @@ export default function TestGuide({ onBack }) {
         </p>
       </section>
 
-      <section className="card" aria-labelledby="full-flow">
-        <h2 id="full-flow">Cómo probar el flujo completo</h2>
-        <ol className="flow">
-          <li><span aria-hidden="true">📱</span> <strong>Usuaria:</strong> en la app, toca 3 veces seguidas el botón SOS. Suena la alarma y empieza a enviar su ubicación.</li>
-          <li><span aria-hidden="true">🔗</span> <strong>Familiar:</strong> inicia sesión en este portal, escribe el código de invitación que ve la usuaria en su app y mira el mapa en vivo.</li>
-          <li><span aria-hidden="true">⚠️</span> <strong>Sin señal:</strong> si el teléfono deja de enviar datos por 30 segundos (por ejemplo, en modo avión), el portal muestra «Señal perdida».</li>
-          <li><span aria-hidden="true">✅</span> <strong>Fin:</strong> la usuaria toca «Estoy a salvo» y la alerta termina.</li>
-        </ol>
+      <section aria-labelledby="two-accounts">
+        <h2 id="two-accounts">Cómo probar con dos cuentas</h2>
+        <p>Necesitas dos personas (o dos cuentas): una usuaria con la app en el celular y un familiar que la acompaña.</p>
+        <div className="roles">
+          {ROLES.map((role) => <RoleCard key={role.id} {...role} />)}
+        </div>
+      </section>
+
+      <section className="card" aria-labelledby="expect">
+        <h2 id="expect">Qué esperar</h2>
+        <ul className="checklist" role="list">
+          {EXPECTATIONS.map((item) => <li key={item}><span aria-hidden="true">✓</span> {item}</li>)}
+        </ul>
       </section>
 
       <a className="btn btn-primary" href="/" onClick={onBack}>Ir a iniciar sesión</a>
