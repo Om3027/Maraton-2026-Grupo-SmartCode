@@ -1,0 +1,18 @@
+:root {
+  --bg: #fdfbff;
+  --text: #1d1b20;
+  --muted: #4a4458;
+  --primary: #6a1b9a;
+  --primary-text: #ffffff;
+  --danger: #b3261e;
+  --ok: #1b5e20;
+  --border: #cac4d0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+body { margin: 0; background: var(--bg); }
+.container { max-width: 960px; margin: 0 auto; padding: 16px; }
+:focus-visible { outline: 3px solid #ff8f00; outline-offset: 2px; }
