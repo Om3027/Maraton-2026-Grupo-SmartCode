@@ -42,6 +42,11 @@
           "locationWhenInUsePermission": "Ruta Segura usa tu ubicación solo durante una alerta, para que tus familiares sepan dónde estás."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2addba67-2338-41ee-aa71-0a78d5654957"
+      }
+    }
   }
 }
