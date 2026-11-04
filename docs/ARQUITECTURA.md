@@ -113,3 +113,12 @@ flowchart LR
 | Nominatim es un tercero y recibe la última coordenada. | Geocodificar en el servidor o usar una instancia propia. |
 | Sondeo cada 5 s, con hasta 5 s de retraso. | Notificaciones push (Expo Notifications) y WebSockets gestionados. |
 | No hay botón de llamar a la Línea 123 desde la app. | Llamada o SMS automático a un contacto de emergencia. |
+
+## 10. Probar la aplicación
+- **URL pública:** https://smartcode-maraton-app-c7f9asg3badvf8fr.spaincentral-01.azurewebsites.net
+- **Guía de prueba:** la página pública `/guia` (enlace «¿Cómo probar la app?» en el portal y en la app) explica cómo instalar el APK o usar Expo Go.
+
+1. Crear una cuenta como **Usuaria** (en la app móvil) y otra como **Familiar** (en la app o en el portal web).
+2. El familiar escribe el **código de invitación** de 8 caracteres que la usuaria ve en su app.
+3. La usuaria toca **3 veces seguidas** el botón SOS en la app móvil: suena la alarma y el familiar ve su ubicación en vivo.
+4. Si el teléfono deja de enviar datos por **30 s**, el portal muestra **«Señal perdida»** con la última ubicación conocida y su hora.
