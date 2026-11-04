@@ -51,6 +51,12 @@ export default function LoginScreen({ onSession, onHelp, onRegister }) {
         hint="Abre el portal de Ruta Segura en el navegador"
         onPress={() => Linking.openURL(BASE_URL).catch(() => setError("No pudimos abrir el navegador."))}
       />
+      <Button
+        label="¿Cómo probar la app?"
+        variant="link"
+        hint="Abre en el navegador la guía para instalar y probar Ruta Segura"
+        onPress={() => Linking.openURL(`${BASE_URL}/guia`).catch(() => setError("No pudimos abrir el navegador."))}
+      />
       <Button label="¿Cómo funciona?" variant="link" onPress={onHelp} />
     </KeyboardAvoidingView>
   );

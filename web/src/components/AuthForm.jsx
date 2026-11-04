@@ -3,7 +3,7 @@ import { api } from "../api.js";
 
 const EMPTY = { email: "", password: "", full_name: "", phone: "", role: "guardian" };
 
-export default function AuthForm({ onSession }) {
+export default function AuthForm({ onSession, onGuide }) {
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
@@ -78,6 +78,7 @@ export default function AuthForm({ onSession }) {
       <button className="btn btn-link" onClick={() => { setMode(isRegister ? "login" : "register"); setError(""); }}>
         {isRegister ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Créala aquí"}
       </button>
+      <a className="btn btn-link" href="/guia" onClick={onGuide}>¿Cómo probar la app?</a>
     </section>
   );
 }
