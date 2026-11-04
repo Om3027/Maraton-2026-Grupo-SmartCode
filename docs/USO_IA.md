@@ -12,6 +12,8 @@
 |---|---|---|---|
 | 9:05 | Prompt inicial: proyecto "Ruta segura para mujeres en el espacio público nocturno" (ODS 5, 11 y 16), stack (Flask MVC, React + Vite, Expo, PostgreSQL), niveles de funcionalidad, requisitos de seguridad OWASP, UX y WCAG. Se pidió un plan de máximo 20 líneas antes de escribir código. | Plan en 6 fases con sus commits. | **Aceptado.** |
 | 9:11 | Ajuste del cronograma a la hora real: Fase 0 directo a `main`, borrador de ARQUITECTURA después de la API, móvil hasta las 10:45, primer despliegue antes de las 9:40. | Plan reprogramado. | **Modificado por el equipo** (tiempos). |
+| 9:15 | (Continuación del plan) Esqueleto Flask + Vite y adaptación del workflow de Azure para el monorepo. | API con `/api/health`, web mínima y CI que compila `web/`, corre `pytest` y despliega solo `api/`. Primer despliegue en verde a las 9:20. | **Aceptado.** Se revisó que se conservaran el paso de despliegue y el secreto de publicación. |
+| 9:21 | (Continuación del plan) API del nivel 1: roles, JWT, código de invitación, alertas, puntos cifrados, estado "señal perdida", protecciones OWASP y una prueba por protección. | Modelos, servicios, controladores y 36 pruebas en verde. | **Aceptado con ajustes:** el JWT dura 60 min y no 15, para que una alerta activa no se corte por vencimiento del token (queda registrado como decisión). Un primer intento de la IA de crear los archivos con un script de bash falló por un error de comillas; se rehizo archivo por archivo. |
 
 ## Evaluación crítica
 _(se completa al cierre)_
